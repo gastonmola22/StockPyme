@@ -6,9 +6,13 @@ public class ProductoRepositorio {
     private Producto [] productos = new Producto[100];
     private int cantidad;
 
-    public void guardar(Producto producto) {
-        productos[cantidad] = producto;
-        cantidad++;
+    public boolean guardar(Producto producto) {
+        if (cantidad < productos.length) {
+            productos[cantidad] = producto;
+            cantidad++;
+            return true;
+        }
+        return false;
     }
     //Devuelve solo los cargados
     public Producto[] listar() {

@@ -1,6 +1,5 @@
 package com.stockpyme;
 
-import com.stockpyme.model.Producto;
 import com.stockpyme.ui.MenuProductos;
 
 import java.util.Scanner;
@@ -14,7 +13,6 @@ public class Main {
     public static void menu() {
         Scanner entrada = new Scanner(System.in);
         MenuProductos menuProductos = new MenuProductos();
-                try{
                     int opcion;
                     do {
                         System.out.println("----- StockPyme -----");
@@ -40,9 +38,7 @@ public class Main {
                                 System.out.println("Opcion no existe...");
                         }
                     } while (opcion != 0);
-                }catch(NullPointerException e){
-                    System.out.println("Error en el programa...");
                 }
 
     }
-}
+

@@ -60,8 +60,8 @@ public class Producto {
         return activo;
     }
 
-    public void setActivo(boolean activo) {
-        this.activo = activo;
+    public void darDeBaja() {
+        this.activo = false;
     }
     public void agregarStock(int cantidad) {
         this.stock += cantidad;

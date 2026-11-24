@@ -47,30 +47,32 @@ public class MenuProductos {
     }
 
     private void alta() {
-        System.out.println("--DANDO DE ALTA---");
-        System.out.println("Codigo : ");
+        System.out.print("Código: ");
         String codigo = entrada.nextLine();
         if (repo.existeCodigo(codigo)) {
-            System.out.println("El codigo ya existe, no se pudo crear el producto.");
+            System.out.println("Error: ya existe un producto con código " + codigo + ".");
             return;
         }
-        System.out.println("Nombre : ");
+        System.out.print("Nombre: ");
         String nombre = entrada.nextLine();
-        System.out.println("Precio : ");
+        System.out.print("Precio: ");
         double precio = entrada.nextDouble();
-        System.out.println("Stock : ");
+        System.out.print("Stock: ");
         int stock = entrada.nextInt();
-        System.out.println("Stock minimo : ");
+        System.out.print("Stock mínimo: ");
         int stockMinimo = entrada.nextInt();
         entrada.nextLine();
         if (precio <= 0 || stock < 0 || stockMinimo < 0) {
-            System.out.println("Datos invalidos, no se pudo crear el producto.");
+            System.out.println("Error: datos inválidos.");
             return;
         }
-        repo.guardar(new Producto(codigo, nombre, precio, stock, stockMinimo));
-        System.out.println("Producto creado correctamente..");
+        Producto p = new Producto(codigo, nombre, precio, stock, stockMinimo);
+        if (repo.guardar(p)) {
+            System.out.println("Producto creado con id " + p.getId() + ".");
+        } else {
+            System.out.println("Error: no hay más lugar para productos.");
+        }
     }
-
     private void listar() {
         Producto[] lista = repo.listar();
         if (lista.length == 0) {
@@ -149,7 +151,7 @@ public class MenuProductos {
             if(!p.isActivo()){
                 System.out.println("El producto ya esta inactivo");
             }else {
-                p.setActivo(false);
+                p.darDeBaja();
                 System.out.println("Producto dado de baja correctamente..");
             }
         }else {
