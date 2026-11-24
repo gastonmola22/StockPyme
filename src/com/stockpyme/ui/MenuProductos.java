@@ -142,7 +142,17 @@ public class MenuProductos {
     }
 
     private void darDeBaja() {
-
+        Producto p = encontrarProducto();
+        if (p !=null){
+            if(!p.isActivo()){
+                System.out.println("El producto ya esta inactivo");
+            }else {
+                p.setActivo(false);
+                System.out.println("Producto dado de baja correctamente..");
+            }
+        }else {
+            System.out.println("El producto no existe...");
+        }
     }
 
     private Producto encontrarProducto() {
