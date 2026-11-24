@@ -9,6 +9,13 @@ public class MenuProductos {
     private Producto[] productos = new Producto[100];
     private int cantidad = 0;
 
+    public MenuProductos() {
+        // datos de prueba
+        productos[cantidad++] = new Producto("001", "Termo", 25000, 10, 3);
+        productos[cantidad++] = new Producto("002", "Mate", 8000, 2, 5);
+        productos[cantidad++] = new Producto("003", "Bombilla", 3500, 4, 4);
+    }
+    
     public void mostrar(){
         int opcion;
         do {
@@ -130,8 +137,9 @@ public class MenuProductos {
             System.out.println("No hay productos con stock bajo.");
         }
     }
+    private void darDeBaja() {
 
-    private void darDeBaja() { }
+    }
     private Producto encontrarProducto(){
         System.out.println("Digite el codigo a buscar: ");
         String codigoProducto = entrada.nextLine();
