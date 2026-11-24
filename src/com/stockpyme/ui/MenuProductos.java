@@ -87,7 +87,6 @@ public class MenuProductos {
         }
         return encontrado;
     }
-
     private void modificarPrecio() {
         Producto p = encontrarProducto();
         if(p !=null){
@@ -117,7 +116,21 @@ public class MenuProductos {
             System.out.println("No se encontro el producto...");
         }
     }
-    private void listarStockBajo() { }
+    private void listarStockBajo() {
+        System.out.println("--- PRODUCTOS CON STOCK BAJO ---");
+        boolean hayAlguno = false;
+        for (int i = 0; i < cantidad; i++) {
+            Producto p = productos[i];
+            if (p.isActivo() && p.tieneStockBajo()) {
+                System.out.println(p);
+                hayAlguno = true;
+            }
+        }
+        if (!hayAlguno) {
+            System.out.println("No hay productos con stock bajo.");
+        }
+    }
+
     private void darDeBaja() { }
     private Producto encontrarProducto(){
         System.out.println("Digite el codigo a buscar: ");
