@@ -77,9 +77,12 @@ public class MenuProductos {
             System.out.println("No hay productos cargados");
             return;
         }
+        System.out.printf("%-4s %-8s %-20s %10s %8s%n", "ID", "CÓDIGO", "NOMBRE", "PRECIO", "STOCK");
         for (Producto p : lista) {
             if (p.isActivo()) {
-                System.out.println(p);
+                System.out.printf("%-4d %-8s %-20s %10.2f %8d", p.getId(), p.getCodigo(), p.getNombre(), p.getPrecio(), p.getStock());
+                if (p.tieneStockBajo()) System.out.print("  (stock bajo)");
+                System.out.println();
             }
         }
     }
@@ -128,11 +131,10 @@ public class MenuProductos {
     }
 
     private void listarStockBajo() {
-        System.out.println("--- PRODUCTOS CON STOCK BAJO ---");
         boolean hayAlguno = false;
         for (Producto p : repo.listar()) {
             if (p.isActivo() && p.tieneStockBajo()) {
-                System.out.println(p);
+                System.out.println(p.getCodigo() + " " + p.getNombre() + ": stock " + p.getStock() + " (mínimo " + p.getStockMinimo() + ")");
                 hayAlguno = true;
             }
         }
