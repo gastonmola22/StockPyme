@@ -1,22 +1,22 @@
 package com.stockpyme.ui;
 
 import com.stockpyme.model.Producto;
+import com.stockpyme.repository.ProductoRepositorio;
 
 import java.util.Scanner;
 
 public class MenuProductos {
     private Scanner entrada = new Scanner(System.in);
-    private Producto[] productos = new Producto[100];
-    private int cantidad = 0;
+    private ProductoRepositorio repo = new ProductoRepositorio();
 
     public MenuProductos() {
         // datos de prueba
-        productos[cantidad++] = new Producto("001", "Termo", 25000, 10, 3);
-        productos[cantidad++] = new Producto("002", "Mate", 8000, 2, 5);
-        productos[cantidad++] = new Producto("003", "Bombilla", 3500, 4, 4);
+        repo.guardar(new Producto("001", "Termo", 25000, 10, 3));
+        repo.guardar(new Producto("002", "Mate", 8000, 2, 5));
+        repo.guardar(new Producto("003", "Bombilla", 3500, 4, 4));
     }
-    
-    public void mostrar(){
+
+    public void mostrar() {
         int opcion;
         do {
             System.out.println("=== StockPyme - Productos ===");
@@ -34,7 +34,7 @@ public class MenuProductos {
 
             switch (opcion) {
                 case 1: alta(); break;
-                case 2: listar();break;
+                case 2: listar(); break;
                 case 3: buscarPorCodigo(); break;
                 case 4: modificarPrecio(); break;
                 case 5: cargarStock(); break;
@@ -45,10 +45,15 @@ public class MenuProductos {
             }
         } while (opcion != 0);
     }
+
     private void alta() {
         System.out.println("--DANDO DE ALTA---");
         System.out.println("Codigo : ");
         String codigo = entrada.nextLine();
+        if (repo.existeCodigo(codigo)) {
+            System.out.println("El codigo ya existe, no se pudo crear el producto.");
+            return;
+        }
         System.out.println("Nombre : ");
         String nombre = entrada.nextLine();
         System.out.println("Precio : ");
@@ -58,76 +63,74 @@ public class MenuProductos {
         System.out.println("Stock minimo : ");
         int stockMinimo = entrada.nextInt();
         entrada.nextLine();
-        if((buscarPorCodigo(codigo))==false){
-            productos[cantidad] = new Producto(codigo, nombre, precio, stock, stockMinimo);
-            cantidad++;
-            System.out.println("Producto creado correctamente..");
-        }else {
-            System.out.println("El codigo ya existe, no se pudo crear el producto.");
+        if (precio <= 0 || stock < 0 || stockMinimo < 0) {
+            System.out.println("Datos invalidos, no se pudo crear el producto.");
             return;
         }
+        repo.guardar(new Producto(codigo, nombre, precio, stock, stockMinimo));
+        System.out.println("Producto creado correctamente..");
     }
-    private void listar() {
-        for (int i = 0; i < cantidad; i++) {
-            System.out.println(productos[i].toString());
-        }
-        System.out.println("Total de productos "+cantidad);
-    }
-    private void buscarPorCodigo() {
-        System.out.println("Digite codigo a buscar: ");
-        String codigoAbuscar = entrada.nextLine();
-        for (int i = 0; i < cantidad; i++) {
-         if (productos[i].getCodigo().equals(codigoAbuscar)) {
-             System.out.println(productos[i].toString());
-             return;
-         }
-        }
-        System.out.println("No se encuentra el producto con el codigo solicitado...");
 
-    }
-    private boolean buscarPorCodigo(String codigo) {
-        boolean encontrado = false;
-        for (int i = 0; i < cantidad; i++) {
-            if (productos[i].getCodigo().equals(codigo)) {
-                return encontrado = true;
+    private void listar() {
+        Producto[] lista = repo.listar();
+        if (lista.length == 0) {
+            System.out.println("No hay productos cargados");
+            return;
+        }
+        for (Producto p : lista) {
+            if (p.isActivo()) {
+                System.out.println(p);
             }
         }
-        return encontrado;
     }
+
+    private void buscarPorCodigo() {
+        Producto p = encontrarProducto();
+        if (p == null) {
+            System.out.println("No se encuentra el producto con el codigo solicitado...");
+        } else {
+            System.out.println(p);
+        }
+    }
+
     private void modificarPrecio() {
         Producto p = encontrarProducto();
-        if(p !=null){
+        if (p != null) {
             System.out.println("Digite precio a modificar: ");
             double precio = entrada.nextDouble();
-            if(precio>0){
-                entrada.nextLine();
+            entrada.nextLine();
+            if (precio > 0) {
                 p.setPrecio(precio);
                 System.out.println("Precio modificado correctamente..");
-            }else{
+            } else {
                 System.out.println("No se puede modificar con un precio negativo.");
             }
-        }else {
+        } else {
             System.out.println("El producto no existe, no se pudo modificar");
         }
     }
+
     private void cargarStock() {
         Producto p = encontrarProducto();
-        if(p !=null){
+        if (p != null) {
             System.out.println("Digite stock a cargar: ");
             int stock = entrada.nextInt();
-            if(stock>0){
+            entrada.nextLine();
+            if (stock > 0) {
                 p.agregarStock(stock);
                 System.out.println("Stock cargado correctamente..");
+            } else {
+                System.out.println("La cantidad debe ser mayor a 0.");
             }
-        }else  {
+        } else {
             System.out.println("No se encontro el producto...");
         }
     }
+
     private void listarStockBajo() {
         System.out.println("--- PRODUCTOS CON STOCK BAJO ---");
         boolean hayAlguno = false;
-        for (int i = 0; i < cantidad; i++) {
-            Producto p = productos[i];
+        for (Producto p : repo.listar()) {
             if (p.isActivo() && p.tieneStockBajo()) {
                 System.out.println(p);
                 hayAlguno = true;
@@ -137,18 +140,14 @@ public class MenuProductos {
             System.out.println("No hay productos con stock bajo.");
         }
     }
+
     private void darDeBaja() {
 
     }
-    private Producto encontrarProducto(){
+
+    private Producto encontrarProducto() {
         System.out.println("Digite el codigo a buscar: ");
-        String codigoProducto = entrada.nextLine();
-        for (int i = 0; i < cantidad; i++) {
-            if (productos[i].getCodigo().equals(codigoProducto)) {
-                return productos[i];
-            }
-        }
-        return null;
+        String codigo = entrada.nextLine();
+        return repo.buscarPorCodigo(codigo);
     }
 }
-
