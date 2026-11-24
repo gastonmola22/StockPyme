@@ -1,4 +1,5 @@
 .idea/
 *.iml
-out/config.properties
+out/
+config.properties
 .env

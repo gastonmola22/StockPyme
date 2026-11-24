@@ -1,5 +1,7 @@
 package com.stockpyme.model;
 
+import java.util.Objects;
+
 public class Producto {
     private Long id;
     private String codigo;
@@ -25,32 +27,17 @@ public class Producto {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public String getCodigo() {
         return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public int getStock() {
         return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public double getPrecio() {
@@ -75,5 +62,40 @@ public class Producto {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+    public void agregarStock(int cantidad) {
+        this.stock += cantidad;
+    }
+    public boolean tieneStockBajo(){
+        if(stock<=stockMinimo){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(codigo, producto.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(codigo);
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "id=" + id +
+                ", codigo='" + codigo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", precio=" + precio +
+                ", stock=" + stock +
+                ", stockMinimo=" + stockMinimo +
+                ", activo=" + activo +
+                '}';
     }
 }
