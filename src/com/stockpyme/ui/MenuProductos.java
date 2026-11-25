@@ -6,14 +6,12 @@ import com.stockpyme.repository.ProductoRepositorio;
 import java.util.Scanner;
 
 public class MenuProductos {
-    private Scanner entrada = new Scanner(System.in);
-    private ProductoRepositorio repo = new ProductoRepositorio();
+    private Scanner entrada ;
+    private ProductoRepositorio repo;
 
-    public MenuProductos() {
-        // datos de prueba
-        repo.guardar(new Producto("001", "Termo", 25000, 10, 3));
-        repo.guardar(new Producto("002", "Mate", 8000, 2, 5));
-        repo.guardar(new Producto("003", "Bombilla", 3500, 4, 4));
+    public MenuProductos(Scanner entrada, ProductoRepositorio repo) {
+        this.entrada = entrada;
+        this.repo = repo;
     }
 
     public void mostrar() {
@@ -151,7 +149,7 @@ public class MenuProductos {
             if(!p.isActivo()){
                 System.out.println("El producto ya esta inactivo");
             }else {
-                p.darDeBaja();
+                p.darDeBaja( );
                 System.out.println("Producto dado de baja correctamente..");
             }
         }else {
